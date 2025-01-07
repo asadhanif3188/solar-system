@@ -6,28 +6,72 @@ on:
     branches:
       - main
       - 'feature/*'
-    
-jobs:
-    unit-testing:
-        name: Unit Testing
-        runs-on: ubuntu-latest
-        steps:
-        - name: Checkout Repository
-          uses: actions/checkout@v4
 
-        - name: Setup NodeJS Version
-          uses: actions/setup-node@v3
-          with:
-            node-version: 20
+
+jobs:
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Project
+        run: npm run build
+
+  test:
+    name: Run Tests
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Tests
+        run: npm test
+
+
+
+
+
     
-        - name: Install Dependencies
-          run: npm install
+# jobs:
+#     unit-testing:
+#         name: Unit Testing
+#         runs-on: ubuntu-latest
+#         steps:
+#         - name: Checkout Repository
+#           uses: actions/checkout@v4
+
+#         - name: Setup NodeJS Version
+#           uses: actions/setup-node@v3
+#           with:
+#             node-version: 20
     
-        - name: Unit Testing
-          run: npm test
+#         - name: Install Dependencies
+#           run: npm install
+    
+#         - name: Unit Testing
+#           run: npm test
           
-        - name: Archive Test Result
-          uses: actions/upload-artifact@v3
-          with:
-            name: Mocha-Test-Result
-            path: test-results.xml
+#         - name: Archive Test Result
+#           uses: actions/upload-artifact@v3
+#           with:
+#             name: Mocha-Test-Result
+#             path: test-results.xml
